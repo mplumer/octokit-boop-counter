@@ -1,0 +1,17 @@
+{
+  "name": "octokit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/plugin-create-or-update-text-file": "^1.0.4",
+    "dotenv": "^16.0.0",
+    "octokit": "^1.7.1"
+  }
+}
