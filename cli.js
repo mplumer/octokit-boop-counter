@@ -24,7 +24,7 @@ async function run() {
 
   const response = await octokit.createOrUpdateTextFile({
     owner: "mplumer",
-    repo: "mplumer",
+    repo: "octokit-boop-counter",
     path: "README.md",
     message: "BOOP",
     content: ({ content }) => {
