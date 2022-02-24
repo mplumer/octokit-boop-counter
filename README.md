@@ -2,4 +2,4 @@
 
 
 
-I have been booped on the nose <!-- boop-counter -->6<!-- /boop-counter --> times. 
+I have been booped on the nose <!-- boop-counter -->7<!-- /boop-counter --> times. 
