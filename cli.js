@@ -1,19 +1,31 @@
+#!/usr/bin/env node
+
 const { Octokit } = require("octokit");
 const dotenv = require("dotenv");
 const {
   createOrUpdateTextFile,
 } = require("@octokit/plugin-create-or-update-text-file");
+const { createOAuthDeviceAuth } = require("@octokit/auth-oauth-device");
 
 dotenv.config();
 
 const MyOctokit = Octokit.plugin(createOrUpdateTextFile).defaults({
-    userAgent: "Nose Booper"
-  });
-
-const octokit = new MyOctokit({
-  auth: process.env.GITHUB_TOKEN,
+  userAgent: "Nose Booper",
 });
 
+const octokit = new MyOctokit({
+  authStrategy: createOAuthDeviceAuth,
+  auth: {
+    clientType: "oauth-app",
+    clientId: "5d2b486acd597f148f00",
+    scopes: ["public_repo"],
+    onVerification(verification) {
+      console.log("Open %s", verification.verification_uri);
+      console.log("Enter code: %s", verification.user_code);
+    },
+  },
+  //auth: process.env.GITHUB_TOKEN,
+});
 
 async function run() {
   const { data: user } = await octokit.request("GET /user");
@@ -22,17 +34,31 @@ async function run() {
 
   // get the README
 
-  const response = await octokit.createOrUpdateTextFile({
-    owner: "mplumer",
-    repo: "octokit-boop-counter",
-    path: "README.md",
-    message: "BOOP",
-    content: ({ content }) => {
+  try {
+    const response = await octokit.createOrUpdateTextFile({
+      owner: "mplumer",
+      repo: "octokit-boop-counter",
+      path: "README.md",
+      message: "BOOP",
+      content: ({ content }) => {
         return bumpBoopCounter(content);
-    }
-  });
+      },
+    });
 
-  console.log(response.data);
+    console.log("Youve been booped");
+  } catch (error) {
+    const { data: issue } = await octokit.request(
+      "POST /repos/{owner}/{repo}/issues",
+      {
+        owner: "mplumer",
+        repo: "octokit-boop-counter",
+        title: "lemme boop",
+        body: "Here comes a boop",
+      }
+    );
+
+    console.log(`issue created at ${issue.html_url}`);
+  }
 
   // this is the long way
 
